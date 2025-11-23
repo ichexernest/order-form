@@ -103,7 +103,7 @@ export default function Home() {
             <p className="text-gray-600">載入中...</p>
           </div>
         )}
-
+        <h1 className="text-blue-500">{lineId && lineId}</h1>
         {viewMode === "tips" && <Tips onAgree={handleAgree} />}
 
         {viewMode === "form" && (
