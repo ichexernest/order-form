@@ -112,14 +112,14 @@ export default function Home() {
   // 驗證訂單
   const validateOrder = (data: any, currentLineId: string) => {
     // 1. LINE ID 不符
-    // if (data.line_id && data.line_id !== currentLineId) {
-    //   return {
-    //     isValid: false,
-    //     title: "訂單驗證失敗",
-    //     message: "此訂單與您的 LINE 帳號不符",
-    //     type: "error" as const,
-    //   };
-    // }
+    if (data.line_id && data.line_id !== currentLineId) {
+      return {
+        isValid: false,
+        title: "訂單驗證失敗",
+        message: "此訂單與您的 LINE 帳號不符",
+        type: "error" as const,
+      };
+    }
 
     // 2. 訂單未完成
     if (data.is_completed === false) {
@@ -188,7 +188,7 @@ export default function Home() {
         {viewMode === "tips" && <Tips onAgree={handleAgree} />}
 
         {viewMode === "form" && (
-          <Form lineId={lineId} onSubmit={handleSubmit} isLoading={isLoading} />
+          <Form lineId={lineId} onSubmit={handleSubmit} isLoading={isLoading}  />
         )}
 
         <Dialog
