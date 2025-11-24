@@ -67,57 +67,124 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://test.goodmoods.store/wp-json/gm/v1/set-logged", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ order_number: orderNumber }),
-      });
+      // 1. 查詢訂單資訊
+      const orderInfo = await fetchOrderInfo(orderNumber);
 
-      const data = await response.json();
+      // 2. 驗證訂單狀態
+      const validation = validateOrder(orderInfo, lineId);
 
-      // 根據 response 判斷結果
-      // 1. 檢查 line_id 是否與登入的 lineId 不同
-      if (data.line_id && data.line_id !== lineId) {
-        showDialog("訂單驗證失敗", "此訂單與您的 LINE 帳號不符", "error");
+      if (!validation.isValid) {
+        showDialog(validation.title, validation.message, validation.type);
+        return;
       }
-      // 2. 檢查訂單是否未完成
-      else if (data.is_completed === false) {
-        showDialog("訂單狀態錯誤", "查無訂單或訂單未完成", "error");
-      }
-      // 3. 檢查訂單是否已登錄
-      else if (data.is_logged === true) {
-        showDialog("訂單已登錄", "該訂單已經登錄過活動", "warning");
-      }
-      // 4. 訂單正確且未登錄，顯示成功
-      else if (data.is_completed === true && data.is_logged === false) {
-        showDialog("登錄成功", "您的訂單已成功登錄活動！", "success");
-      }
-      // 5. 其他情況
-      else {
-        showDialog("提交失敗", "訂單狀態異常，請聯繫客服", "error");
-      }
+
+      // 3. 登錄訂單
+      await registerOrder(orderNumber);
+      showDialog("登錄成功", "您的訂單已成功登錄活動！", "success");
     } catch (error) {
       console.error("Submit failed", error);
-      showDialog("提交失敗", "網路錯誤，請稍後再試", "error");
+      const errorMessage = error instanceof Error ? error.message : "網路錯誤，請稍後再試";
+      showDialog("提交失敗", errorMessage, "error");
     } finally {
       setIsLoading(false);
     }
   };
 
+  // 查詢訂單資訊
+  const fetchOrderInfo = async (orderNumber: string) => {
+    const response = await fetch(
+      `https://test.goodmoods.store/wp-json/gm/v1/order-info?order_number=${orderNumber}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
+  };
+
+  // 驗證訂單
+  const validateOrder = (data: any, currentLineId: string) => {
+    // 1. LINE ID 不符
+    // if (data.line_id && data.line_id !== currentLineId) {
+    //   return {
+    //     isValid: false,
+    //     title: "訂單驗證失敗",
+    //     message: "此訂單與您的 LINE 帳號不符",
+    //     type: "error" as const,
+    //   };
+    // }
+
+    // 2. 訂單未完成
+    if (data.is_completed === false) {
+      return {
+        isValid: false,
+        title: "訂單狀態錯誤",
+        message: "查無訂單或訂單未完成",
+        type: "error" as const,
+      };
+    }
+
+    // 3. 訂單已登錄
+    if (data.is_logged === true) {
+      return {
+        isValid: false,
+        title: "訂單已登錄",
+        message: "該訂單已經登錄過活動",
+        type: "warning" as const,
+      };
+    }
+
+    // 4. 訂單驗證通過
+    if (data.is_completed === true && data.is_logged === false) {
+      return { isValid: true, title: "", message: "", type: "success" as const };
+    }
+
+    // 5. 其他異常情況
+    return {
+      isValid: false,
+      title: "提交失敗",
+      message: "訂單狀態異常，請聯繫客服",
+      type: "error" as const,
+    };
+  };
+
+  // 登錄訂單
+  const registerOrder = async (orderNumber: string) => {
+    const response = await fetch("https://test.goodmoods.store/wp-json/gm/v1/set-logged", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ order_number: orderNumber, action: "add" }),
+    });
+
+    if (!response.ok) {
+      throw new Error("訂單登錄失敗");
+    }
+
+    return await response.json();
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-red-100">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-start pb-8  bg-white">
+        <div className="w-full h-[250px] bg-sky-200">
+          <h1>GoodMood 聖誕抽獎登錄活動</h1>
+        </div>
         {viewMode === "loading" && (
           <div className="flex flex-col items-center space-y-4">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-400"></div>
             <p className="text-gray-600">載入中...</p>
           </div>
         )}
-        <div className="w-full h-[250px] bg-sky-200">
-          <h1>GoodMood 聖誕抽獎登錄活動</h1>
-        </div>
+
         {viewMode === "tips" && <Tips onAgree={handleAgree} />}
 
         {viewMode === "form" && (
