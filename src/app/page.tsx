@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import liff from "@line/liff";
 import Tips from "@/component/tips";
 import Form from "@/component/form";
@@ -175,8 +176,14 @@ export default function Home() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-red-100">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-start pb-8  bg-white">
-        <div className="w-full h-[250px] bg-sky-200">
-          <h1>GoodMood 聖誕抽獎登錄活動</h1>
+        <div className="w-full h-[250px] relative">
+          <Image
+            src="/a.jpg"
+            alt="GoodMood 聖誕抽獎登錄活動"
+            fill
+            className="object-cover"
+            priority
+          />
         </div>
         {viewMode === "loading" && (
           <div className="flex flex-col items-center space-y-4">
@@ -184,6 +191,7 @@ export default function Home() {
             <p className="text-gray-600">載入中...</p>
           </div>
         )}
+        <h1>GoodMood 2025聖誕抽獎登錄活動</h1>
 
         {viewMode === "tips" && <Tips onAgree={handleAgree} />}
 
