@@ -191,7 +191,16 @@ export default function Home() {
             <p className="text-gray-600">載入中...</p>
           </div>
         )}
-        <h1>GoodMood 2025聖誕抽獎登錄活動</h1>
+        <h1 className="mt-5 font-bold text-2xl text-red-800">GoodMood 2025聖誕抽獎登錄活動</h1>
+
+        <a
+          href="https://goodmoods.store/notice-20251201/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 px-6 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors shadow-md"
+        >
+          前往查看活動詳情
+        </a>
 
         {viewMode === "tips" && <Tips onAgree={handleAgree} />}
 

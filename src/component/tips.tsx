@@ -4,10 +4,10 @@ interface TipsProps {
 
 export default function Tips({ onAgree }: TipsProps) {
   return (
-    <div className="flex flex-col items-center justify-center p-6 space-y-6 mx-auto">
-      <h2 className="text-2xl font-bold text-gray-800">活動責任聲明</h2>
-      <div className="bg-gray-100 p-4 rounded-lg space-y-3 text-gray-700">
-        <p className="text-sm">
+    <div className="flex flex-col items-center justify-center p-6 space-y-4 mx-auto w-full">
+      <h2 className="text-xl font-bold text-gray-800">活動責任聲明</h2>
+      <div className="bg-gray-100 p-4 rounded-lg text-gray-700 max-h-[400px] overflow-y-auto w-full">
+        <p className="text-xs leading-relaxed whitespace-pre-line">
           GoodMood｜訂單編號填寫抽獎活動辦法
 
 一、主辦單位
@@ -80,10 +80,11 @@ export default function Tips({ onAgree }: TipsProps) {
 主辦單位將依照【個人資料保護法】規定，於本活動範圍內蒐集、處理、利用參加者之個人資料，不做其他用途。
 中獎者同意主辦單位得於活動公告中公開其 訂單編號與姓名。
         </p>
-      </div>    
+      </div>
+
       <button
         onClick={onAgree}
-        className="w-full py-3 bg-amber-400 hover:bg-amber-500 text-white font-semibold rounded-xl transition-colors"
+        className="w-full py-3 bg-amber-400 hover:bg-amber-500 text-white font-semibold rounded-xl transition-colors shadow-md"
       >
         我同意並繼續
       </button>
