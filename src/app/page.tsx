@@ -94,7 +94,7 @@ export default function Home() {
   // 查詢訂單資訊
   const fetchOrderInfo = async (orderNumber: string) => {
     const response = await fetch(
-      `https://test.goodmoods.store/wp-json/gm/v1/order-info?order_number=${orderNumber}`,
+      `https://goodmoods.store/wp-json/gm/v1/order-info?order_number=${orderNumber}`,
       {
         method: "GET",
         headers: {
@@ -158,7 +158,7 @@ export default function Home() {
 
   // 登錄訂單
   const registerOrder = async (orderNumber: string) => {
-    const response = await fetch("https://test.goodmoods.store/wp-json/gm/v1/set-logged", {
+    const response = await fetch("https://goodmoods.store/wp-json/gm/v1/set-logged", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
