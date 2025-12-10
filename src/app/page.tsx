@@ -123,14 +123,14 @@ export default function Home() {
     }
 
     // 2. 訂單未完成
-    if (data.is_completed === false) {
-      return {
-        isValid: false,
-        title: "訂單狀態錯誤",
-        message: "查無訂單或訂單未完成",
-        type: "error" as const,
-      };
-    }
+    // if (data.is_completed === false) {
+    //   return {
+    //     isValid: false,
+    //     title: "訂單狀態錯誤",
+    //     message: "查無訂單或訂單未完成",
+    //     type: "error" as const,
+    //   };
+    // }
 
     // 3. 訂單已登錄
     if (data.is_logged === true) {
@@ -143,7 +143,7 @@ export default function Home() {
     }
 
     // 4. 訂單驗證通過
-    if (data.is_completed === true && data.is_logged === false) {
+    if ( data.is_logged === false) {
       return { isValid: true, title: "", message: "", type: "success" as const };
     }
 
